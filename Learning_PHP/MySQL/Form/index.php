@@ -58,32 +58,36 @@
         $email = $_POST['email'];
         $desc = $_POST['desc'];
 
-// Submit to the DataBase
-// Connecting to the Database
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'sample_db';
+        // Submit to the DataBase
+        // Connecting to the Database
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $database = 'sample_db';
 
-// Create a Connection
-$conn = mysqli_connect($servername, $username, $password, $database);
+        // Create a Connection
+        $conn = mysqli_connect($servername, $username, $password, $database);
 
-// Die if connection was not Successful
-if (!$conn) {
-    die("Sorry, We failed to connect: " . mysqli_connect_error());
-} else {
-    $sql = 'INSERT INTO `contact_us` () VALUES ()';
-    $result = mysqli_query($conn, $sql);
+        // Die if connection was not Successful
+        if (!$conn) {
+            die("Sorry, We failed to connect: " . mysqli_connect_error());
+        } else {
+            $sql = "INSERT INTO `contact_us` (`name`, `email`, `concern`, `dt`) VALUES ('$name', '$email', '$desc', current_timestamp())";
+            $result = mysqli_query($conn, $sql);
 
-    if($result){
-        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            if ($result) {
+                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>Holy guacamole!</strong> Your Entry has been submitted sucessfully.
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>';
-    } else {
-        echo 'The record was not inserted successfully beacuse' . mysqli_error($conn);
-    }
-}
+            } else {
+                echo 'The record was not inserted successfully beacuse' . mysqli_error($conn);
+//                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+// <strong>We are facing some technical Issues!</strong> Your Entry was not submitted sucessfully.
+// <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+// </div>';
+            }
+        }
     }
 
     //Submit these to a DataBase
@@ -99,7 +103,7 @@ if (!$conn) {
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
             </div>
             <div class="mb-3">
                 <label for="desc" class="form-label">Description</label>
