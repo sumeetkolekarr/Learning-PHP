@@ -18,12 +18,13 @@ if (!$conn) {
     // echo 'Connection was Successful!<br>';
 }
 
-if (isset($_GET['delete'])) {
-    $sno = $_GET['delete'];
-    $delete = true;
-    $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
-    $result = mysqli_query($conn, $sql);
-}
+// if (isset($_GET['delete'])) {
+//     $sno = $_GET['delete'];
+//     $delete = true;
+//     $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
+//     $result = mysqli_query($conn, $sql);
+// }
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['snoEdit'])) {
         $sno = $_POST['snoEdit'];
@@ -37,6 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $update = false;
         }
+    } elseif (isset($_POST['snoDelete'])) {
+        $sno = $_POST['snoDelete'];
+        $delete = true;
+        $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
+        $result = mysqli_query($conn, $sql);
     } else {
 
         $title = $_POST['title'];
@@ -66,6 +72,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this note?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="/Learning_PHP/Projects/CRUD/index.php" method="POST" id="deleteForm">
+                        <input type="hidden" name="snoDelete" id="snoDelete">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -176,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <th scope='row'>" . $sno . "</th>
                     <td>" . $row['title'] . "</td>
                     <td>" . $row['description'] . "</td>
-                    <td><button class='edit btn btn-sm btn-primary' data-bs-toggle='modal' data-bs-target='#editModal' id=" . $row['sno'] . ">Edit</button> <button class='delete btn btn-sm btn-primary' id=d" . $row['sno'] . ">Delete</button></td>
+                    <td><button class='edit btn btn-sm btn-primary' data-bs-toggle='modal' data-bs-target='#editModal' id=" . $row['sno'] . ">Edit</button> <button class='delete btn btn-sm btn-primary' data-bs-toggle='modal' data-bs-target='#deleteModal' id=d" . $row['sno'] . ">Delete</button></td>
                 </tr>";
                 }
                 ?>
@@ -208,15 +237,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         deletes = document.getElementsByClassName('delete')
         Array.from(deletes).forEach((element) => {
             element.addEventListener('click', (e) => {
-                console.log('edit')
+                console.log('delete')
                 sno = e.target.id.substr(1, )
-                if (confirm('Are you sure you want to delete this note?')) {
-                    console.log('yes')
-                    window.location = `/Learning_PHP/Projects/CRUD/index.php?delete=${sno}`
-                    //TODO: Create a form and use post request to submit the form
-                } else {
-                    console.log('no')
-                }
+                // if (confirm('Are you sure you want to delete this note?')) {
+                //     console.log('yes')
+                //     window.location = `/Learning_PHP/Projects/CRUD/index.php?delete=${sno}`
+                //     // TODO: Create a form and use post request to submit the form
+                // } else {
+                //     console.log('no')
+                // }
+                document.getElementById('snoDelete').value = sno;
+                $('#deleteModal').modal('show');
             })
         })
     </script>
